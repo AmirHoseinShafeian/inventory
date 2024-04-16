@@ -7,7 +7,7 @@ namespace inventory.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductRemittanceController:ControllerBase
+    public class ProductRemittanceController : ControllerBase
     {
         private readonly EFCoreContext _context;
 
@@ -19,24 +19,32 @@ namespace inventory.Controllers
         [HttpPost]
         public ActionResult<ProductRemittance> CreateProductRegistration(ProductRemittanceDto ProductRemittanceDto)
         {
-
-            ProductRemittance ProductRemittance = new ProductRemittance();
-            ProductRemittanceDto.DataRegister = DateTime.Now;
-            ProductRemittance.DataRegister = ProductRemittanceDto.DataRegister;
-            ProductRemittance.ProductId = ProductRemittanceDto.ProductId;
-            ProductRemittance.PriceOfProduct = ProductRemittanceDto.PriceOfProduct;
-            ProductRemittance.ProductNumber = ProductRemittanceDto.ProductNumber;
-            var totalPrice = ProductRemittanceDto.PriceOfProduct * ProductRemittanceDto.ProductNumber;
-            ProductRemittance.TotalPrice = totalPrice;
-
-            if (ProductRemittanceDto == null)
+            try
             {
-                return BadRequest();
-            }
-            _context.productRemittances.Add(ProductRemittance);
-            _context.SaveChanges();
+                ProductRemittance ProductRemittance = new ProductRemittance();
+                ProductRemittanceDto.DataRegister = DateTime.Now;
+                ProductRemittance.DataRegister = ProductRemittanceDto.DataRegister;
+                ProductRemittance.ProductId = ProductRemittanceDto.ProductId;
+                ProductRemittance.PriceOfProduct = ProductRemittanceDto.PriceOfProduct;
+                ProductRemittance.ProductNumber = ProductRemittanceDto.ProductNumber;
+                var totalPrice = ProductRemittanceDto.PriceOfProduct * ProductRemittanceDto.ProductNumber;
+                ProductRemittance.TotalPrice = totalPrice;
 
-            return Ok(ProductRemittanceDto);
+                if (ProductRemittanceDto == null)
+                {
+                    return BadRequest();
+                }
+                _context.productRemittances.Add(ProductRemittance);
+                _context.SaveChanges();
+
+                return Ok(ProductRemittanceDto);
+
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("خطایی رخ داده است");
+            }
         }
 
     }
