@@ -8,5 +8,8 @@
         public ProductGroup ProductGroup { get; set; }
         public int Price { get; set; }
         public int? XpDate { get; set; }
+
+        public List<ProductRegistration> ProductRegistrations { get; set; } = new List<ProductRegistration>();
+        public List<ProductRemittance> ProductRemittances { get; set; } = new List<ProductRemittance>();
     }
 }

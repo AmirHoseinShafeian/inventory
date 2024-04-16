@@ -135,8 +135,8 @@ namespace inventory.Controllers
 
         }
 
-        [HttpGet, Route("Report")]
-        public async Task<ActionResult<IEnumerable<Product>>> ProductReport(string name)
+        [HttpGet, Route("ReportByName")]
+        public async Task<ActionResult<IEnumerable<Product>>> ProductReportByname(string name)
         {
             try
             {
@@ -165,7 +165,7 @@ namespace inventory.Controllers
                 }
 
 
-                ProductReportDto productReport = new ProductReportDto();
+                ProductReportByNameDto productReport = new ProductReportByNameDto();
 
                 productReport.Count = inputItemCount - outputtItemCount;
                 productReport.ProductName = productName.Name;
@@ -183,5 +183,40 @@ namespace inventory.Controllers
 
 
         }
+
+        [HttpGet, Route("Report")]
+        public ActionResult<List<ProductReportDto>> ProductReport()
+        {
+            try
+            {
+
+                var productReport = _context.products.Include(p => p.ProductGroup).Include(s => s.ProductRegistrations).Include(d => d.ProductRemittances).Select(m =>
+                   new ProductReportDto()
+                   {
+                       Price = m.Price,
+                       ProductGroupName = m.ProductGroup.Name,
+                       ProductName = m.Name,
+                       ProductId = m.Id,
+                       Count = m.ProductRegistrations.Sum(q => q.ProductNumber) - m.ProductRemittances.Sum(a => a.ProductNumber)
+                   }
+                    ).OrderBy(y => y.Price).ToList();
+
+                if (productReport == null)
+                {
+                    return Ok(new List<ProductReportDto>());
+                }
+
+
+                return Ok(productReport);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("خطایی رخ داده است");
+            }
+
+        }
+
+
     }
 }
