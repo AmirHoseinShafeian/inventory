@@ -21,7 +21,6 @@ namespace inventory.Controllers
         {
             try
             {
-
                 ProductRegistration productRegistration = new ProductRegistration();
                 productRegistrationDto.DataRegister = DateTime.Now;
                 productRegistration.DataRegister = productRegistrationDto.DataRegister;
