@@ -31,8 +31,6 @@ namespace inventory.Controllers
                 return BadRequest("خطایی رخ داده است");
             }
 
-
-
         }
         [HttpGet("{id}")]
         public ActionResult<Product> GetProductById(int id)
