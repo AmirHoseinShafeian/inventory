@@ -18,11 +18,31 @@ namespace inventory.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductGroup>>> GetProductGroup()
+        public async Task<ActionResult<IEnumerable<ProductGroupListDto>>> GetProductGroup()
         {
             try
             {
-                return await _context.productGroups.ToListAsync();
+                List<ProductGroup> productGroupList = new List<ProductGroup>();
+                productGroupList = await _context.productGroups.ToListAsync();
+
+                List<ProductGroupListDto> productGroupListDto = new List<ProductGroupListDto>();
+
+                foreach (var item in productGroupList)
+                {
+                    productGroupListDto.Add(new ProductGroupListDto()
+                    {
+
+                        Id = item.Id,
+                        Name = item.Name,
+
+                        ParentGroupId = item.ParentGroup != null ? item.ParentGroup.Id : null,
+                        ParentGroupName = item.ParentGroup != null ? item.ParentGroup.Name : null,
+
+                        Code = item.Code
+                    });
+                }
+
+                return productGroupListDto;
             }
             catch (Exception)
             {
@@ -30,28 +50,40 @@ namespace inventory.Controllers
                 return BadRequest("خطایی رخ داده است");
             }
 
-            
+
 
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ProductGroup> GetProductGroupById(int id)
+        public ActionResult<ProductGroupListDto> GetProductGroupById(int id)
         {
             try
             {
-                var product = _context.productGroups.Find(id);
+                var product = _context.productGroups.Include(m => m.ParentGroup).FirstOrDefault(p => p.Id == id);
                 if (product == null)
                 {
-                    return new EmptyResult();
+                    return NotFound();
                 }
-                return product;
+                ProductGroupListDto productGroupListDto = new ProductGroupListDto();
+
+                productGroupListDto.Id = product.Id;
+                productGroupListDto.Name = product.Name;
+                productGroupListDto.Code = product.Code;
+                if (product.ParentGroup != null)
+                {
+                    productGroupListDto.ParentGroupId = product.ParentGroup.Id;
+                    productGroupListDto.ParentGroupName = product.ParentGroup.Name;
+                }
+
+                return productGroupListDto;
+
             }
             catch (Exception)
             {
 
                 return BadRequest("خطایی رخ داده است");
             }
-            
+
         }
 
         [HttpPost]
@@ -63,24 +95,24 @@ namespace inventory.Controllers
                 var uid = rand.Next(1, 500);
                 ProductGroup productGroup = new ProductGroup();
                 productGroup.Name = productGroupDto.Name;
-                productGroup.ProductGroupCode = uid;
+                productGroup.Code = uid;
                 productGroup.ParentGroupId = productGroupDto.ParentGroup;
                 if (productGroupDto == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
                 _context.productGroups.Add(productGroup);
                 _context.SaveChanges();
                 return Ok(productGroupDto);
 
             }
-            catch (Exception )
+            catch (Exception)
             {
 
                 return BadRequest("خطایی رخ داده است");
             }
-           
-           
+
+
         }
 
         [HttpDelete("{id}")]
@@ -91,7 +123,7 @@ namespace inventory.Controllers
                 var productGroup = _context.productGroups.Find(id);
                 if (productGroup == null)
                 {
-                    return new EmptyResult();
+                    return NotFound();
                 }
                 _context.productGroups.Remove(productGroup);
                 await _context.SaveChangesAsync();
@@ -102,9 +134,9 @@ namespace inventory.Controllers
 
                 return BadRequest("خطایی رخ داده است");
             }
-            
 
-            
+
+
         }
 
         [HttpPut, Route("update")]
@@ -115,12 +147,12 @@ namespace inventory.Controllers
                 var productGroup = _context.productGroups.FirstOrDefault(x => x.Id == productGroupUpdateDto.Id);
                 if (productGroup == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 productGroup.Name = productGroupUpdateDto.Name ?? productGroup.Name;
                 productGroup.ParentGroupId = productGroupUpdateDto.ParentGroup ?? productGroup.ParentGroupId;
-                productGroup.ProductGroupCode = productGroupUpdateDto.ProductGroupId ?? productGroup.ProductGroupCode;
+                productGroup.Code = productGroupUpdateDto.ProductGroupId ?? productGroup.Code;
 
                 _context.Entry(productGroup).State = EntityState.Modified;
                 _context.productGroups.Update(productGroup);
@@ -133,7 +165,7 @@ namespace inventory.Controllers
 
                 return BadRequest("خظایی رخ داده است");
             }
-            
+
 
         }
     }

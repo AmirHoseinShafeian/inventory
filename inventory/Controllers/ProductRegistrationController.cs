@@ -27,12 +27,12 @@ namespace inventory.Controllers
                 productRegistration.ProductId = productRegistrationDto.ProductId;
                 productRegistration.PriceOfProduct = productRegistrationDto.PriceOfProduct;
                 productRegistration.ProductNumber = productRegistrationDto.ProductNumber;
-                var totalPrice = productRegistrationDto.PriceOfProduct * productRegistrationDto.ProductNumber;
+                var totalPrice = productRegistration.PriceOfProduct * productRegistration.ProductNumber;
                 productRegistration.TotalPrice = totalPrice;
 
                 if (productRegistrationDto == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
                 _context.productRegistrations.Add(productRegistration);
                 _context.SaveChanges();

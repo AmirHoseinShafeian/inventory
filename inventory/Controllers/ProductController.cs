@@ -40,7 +40,7 @@ namespace inventory.Controllers
                 var product = _context.products.Find(id);
                 if (product == null)
                 {
-                    return new EmptyResult();
+                    return NotFound();
                 }
                 return product;
 
@@ -86,10 +86,10 @@ namespace inventory.Controllers
                 product.Name = productDto.Name;
                 product.ProductGroupId = productDto.ProductGroupId;
                 product.Price = productDto.Price;
-                product.XpDate = productDto.XpDate;
+                product.Exp = productDto.Exp;
                 if (productDto == null)
                 {
-                    return BadRequest();
+                    return  NotFound();
                 }
                 _context.products.Add(product);
                 _context.SaveChanges();
@@ -112,13 +112,13 @@ namespace inventory.Controllers
                 var product = _context.products.FirstOrDefault(x => x.Id == productUpdateDto.Id);
                 if (product == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
 
                 product.Name = productUpdateDto.Name ?? product.Name;
                 product.ProductGroupId = productUpdateDto.ProductGroupId ?? product.ProductGroupId;
                 product.Price = productUpdateDto.Price ?? product.Price;
-                product.XpDate = productUpdateDto.XpDate ?? product.XpDate;
+                product.Exp = productUpdateDto.Exp ?? product.Exp;
 
 
                 _context.Entry(product).State = EntityState.Modified;

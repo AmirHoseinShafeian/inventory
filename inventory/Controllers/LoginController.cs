@@ -19,7 +19,7 @@ namespace inventory.Controllers
 
                 if (user is null)
                 {
-                    return BadRequest("Invalid user request!!!");
+                    return NotFound();
                 }
                 if (user.UserName == "amir" && user.Password == "@amir1234")
                 {

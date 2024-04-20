@@ -8,7 +8,7 @@ namespace inventory.Entities
         public string Name { get; set; }
         public ProductGroup? ParentGroup { get; set; }
         public int? ParentGroupId { get; set; }
-        public int ProductGroupCode { get; set; }
+        public int Code { get; set; }
 
         public List<Product> Products { get; set; }
 

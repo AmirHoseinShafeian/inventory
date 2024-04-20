@@ -27,12 +27,12 @@ namespace inventory.Controllers
                 ProductRemittance.ProductId = ProductRemittanceDto.ProductId;
                 ProductRemittance.PriceOfProduct = ProductRemittanceDto.PriceOfProduct;
                 ProductRemittance.ProductNumber = ProductRemittanceDto.ProductNumber;
-                var totalPrice = ProductRemittanceDto.PriceOfProduct * ProductRemittanceDto.ProductNumber;
+                var totalPrice = ProductRemittance.PriceOfProduct * ProductRemittance.ProductNumber;
                 ProductRemittance.TotalPrice = totalPrice;
 
                 if (ProductRemittanceDto == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
                 _context.productRemittances.Add(ProductRemittance);
                 _context.SaveChanges();
