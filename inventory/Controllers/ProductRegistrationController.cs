@@ -22,8 +22,7 @@ namespace inventory.Controllers
             try
             {
                 ProductRegistration productRegistration = new ProductRegistration();
-                productRegistrationDto.DataRegister = DateTime.Now;
-                productRegistration.DataRegister = productRegistrationDto.DataRegister;
+                productRegistration.DataRegister = DateTime.Now;
                 productRegistration.ProductId = productRegistrationDto.ProductId;
                 productRegistration.PriceOfProduct = productRegistrationDto.PriceOfProduct;
                 productRegistration.ProductNumber = productRegistrationDto.ProductNumber;

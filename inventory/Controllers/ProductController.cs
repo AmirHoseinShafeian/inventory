@@ -89,7 +89,7 @@ namespace inventory.Controllers
                 product.Exp = productDto.Exp;
                 if (productDto == null)
                 {
-                    return  NotFound();
+                    return NotFound();
                 }
                 _context.products.Add(product);
                 _context.SaveChanges();
@@ -217,6 +217,102 @@ namespace inventory.Controllers
 
         }
 
+        [HttpGet, Route("ProductReportExp")]
+        public async Task<ActionResult<IEnumerable<Product>>> ProductReportExp()
+        {
+            try
+            {
+                var dateTime = DateTime.Now;
+                dateTime = dateTime.Date.AddDays(3);
 
+                var productReportExp = await _context.products.Where(x => x.Exp == dateTime).ToListAsync();
+
+
+                if (productReportExp == null || productReportExp.Count == 0)
+                    return NotFound();
+
+                return Ok(productReportExp);
+            }
+
+            catch (Exception)
+            {
+
+                return BadRequest("خطایی رخ داده است");
+            }
+
+
+
+        }
+
+        [HttpGet, Route("ReportByCount")]
+        public ActionResult<List<ProductReportDto>> ProductReportByCount()
+        {
+            try
+            {
+
+                var productReport = _context.products.Include(p => p.ProductGroup).Include(s => s.ProductRegistrations).Include(d => d.ProductRemittances).Select(m =>
+                   new ProductReportDto()
+                   {
+                       Price = m.Price,
+                       ProductGroupName = m.ProductGroup.Name,
+                       ProductName = m.Name,
+                       ProductId = m.Id,
+                       Count = m.ProductRegistrations.Sum(q => q.ProductNumber) - m.ProductRemittances.Sum(a => a.ProductNumber)
+                   }
+                    ).Where(z => z.Count < 5).OrderBy(y => y.Price).ToList();
+
+                if (productReport == null)
+                {
+                    return Ok(new List<ProductReportDto>());
+                }
+
+                return Ok(productReport);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("خطایی رخ داده است");
+            }
+
+        }
+
+        [HttpGet, Route("ProductTotalPriceReport")]
+        public ActionResult<List<ProductReportDto>> ProductTotalPriceReport()
+        {
+            try
+            {
+
+                var productReport = _context.products.Include(p => p.ProductGroup).Include(s => s.ProductRegistrations).Include(d => d.ProductRemittances).Select(m =>
+                   new ProductReportDto()
+                   {
+                       Price = m.Price,
+                       Count = m.ProductRegistrations.Sum(q => q.ProductNumber) - m.ProductRemittances.Sum(a => a.ProductNumber)
+                   }
+                    ).ToList();
+
+                if (productReport == null)
+                {
+                    return Ok(new List<ProductTotalPrice>());
+                }
+
+                ProductTotalPrice productTotalPrice = new ProductTotalPrice();
+
+                int totalPrice = 0;
+
+                foreach (var item in productReport)
+                {
+                    totalPrice += item.Price * item.Count;
+                }
+                productTotalPrice.TotalPrice = totalPrice;
+
+                return Ok(productTotalPrice);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("خطایی رخ داده است");
+            }
+
+        }
     }
 }

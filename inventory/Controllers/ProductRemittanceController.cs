@@ -22,8 +22,7 @@ namespace inventory.Controllers
             try
             {
                 ProductRemittance ProductRemittance = new ProductRemittance();
-                ProductRemittanceDto.DataRegister = DateTime.Now;
-                ProductRemittance.DataRegister = ProductRemittanceDto.DataRegister;
+                ProductRemittance.DataRegister = DateTime.Now;
                 ProductRemittance.ProductId = ProductRemittanceDto.ProductId;
                 ProductRemittance.PriceOfProduct = ProductRemittanceDto.PriceOfProduct;
                 ProductRemittance.ProductNumber = ProductRemittanceDto.ProductNumber;
