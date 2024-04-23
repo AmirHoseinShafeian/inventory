@@ -1,6 +1,7 @@
 ﻿using inventory.DataAccess;
 using inventory.Entities;
 using inventory.ModelDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inventory.Controllers
@@ -15,13 +16,13 @@ namespace inventory.Controllers
         {
             _context = context;
         }
-        
+
         /// <summary>
         /// ثبت حواله محصول
         /// </summary>
         /// <param name="ProductRemittanceDto"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, Authorize]
         public ActionResult<ProductRemittance> CreateProductRegistration(ProductRemittanceDto ProductRemittanceDto)
         {
             try

@@ -1,6 +1,7 @@
 ﻿using inventory.DataAccess;
 using inventory.Entities;
 using inventory.ModelDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inventory.Controllers
@@ -21,7 +22,7 @@ namespace inventory.Controllers
         /// </summary>
         /// <param name="productRegistrationDto"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, Authorize]
         public ActionResult<ProductRegistration> CreateProductRegistration(ProductRegistrationDto productRegistrationDto)
         {
             try

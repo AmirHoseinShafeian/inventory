@@ -63,6 +63,7 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 });
+
 #region rate limit config
 builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
