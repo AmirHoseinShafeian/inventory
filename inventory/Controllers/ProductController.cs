@@ -16,7 +16,12 @@ namespace inventory.Controllers
         public ProductController(EFCoreContext context)
         {
             _context = context;
+
         }
+        /// <summary>
+        /// برگرداندن لیست محصولات
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
@@ -32,7 +37,13 @@ namespace inventory.Controllers
             }
 
         }
-        [HttpGet("{id}")]
+
+        /// <summary>
+        /// برگردتندن لیست محصولات یا ای دی
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}"), Authorize]
         public ActionResult<Product> GetProductById(int id)
         {
             try
@@ -52,7 +63,12 @@ namespace inventory.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// حذف لیست محصول
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
 
@@ -76,7 +92,12 @@ namespace inventory.Controllers
             }
         }
 
-        [HttpPost]
+        /// <summary>
+        /// ایجاد لیست محصولات
+        /// </summary>
+        /// <param name="productDto"></param>
+        /// <returns></returns>
+        [HttpPost, Authorize]
         public ActionResult<Product> CreateProduct(ProductDto productDto)
         {
             try
@@ -103,7 +124,12 @@ namespace inventory.Controllers
             return Ok(productDto);
         }
 
-        [HttpPut, Route("update")]
+        /// <summary>
+        /// ویرایش لیست محصولات
+        /// </summary>
+        /// <param name="productUpdateDto"></param>
+        /// <returns></returns>
+        [HttpPut("update"), Authorize]
         public async Task<IActionResult> UpdateProduct(ProductUpdateDto productUpdateDto)
         {
             try
@@ -135,7 +161,12 @@ namespace inventory.Controllers
 
         }
 
-        [HttpGet, Route("ReportByName")]
+        /// <summary>
+        /// گزارش لیست محصول بر اساس نام محصول
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("ReportByName"), Authorize]
         public async Task<ActionResult<IEnumerable<Product>>> ProductReportByname(string name)
         {
             try
@@ -164,7 +195,6 @@ namespace inventory.Controllers
                     outputtItemCount += item.ProductNumber;
                 }
 
-
                 ProductReportByNameDto productReport = new ProductReportByNameDto();
 
                 productReport.Count = inputItemCount - outputtItemCount;
@@ -179,12 +209,13 @@ namespace inventory.Controllers
 
                 return BadRequest("خطایی رخ داده است");
             }
-
-
-
         }
 
-        [HttpGet, Route("Report")]
+        /// <summary>
+        /// گزارش لیست مرتب شده(بر اساس قیمت کمتر)  تمام محصولات  همراه با نام گروه کالا
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Report"), Authorize]
         public ActionResult<List<ProductReportDto>> ProductReport()
         {
             try
@@ -203,7 +234,7 @@ namespace inventory.Controllers
 
                 if (productReport == null)
                 {
-                    return Ok(new List<ProductReportDto>());
+                    return NotFound();
                 }
 
 
@@ -217,7 +248,11 @@ namespace inventory.Controllers
 
         }
 
-        [HttpGet, Route("ProductReportExp")]
+        /// <summary>
+        /// گزارش لیست محصولاتی که 3روز تا انقضایشان باقی مانده
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("ProductReportExp"), Authorize]
         public async Task<ActionResult<IEnumerable<Product>>> ProductReportExp()
         {
             try
@@ -244,7 +279,11 @@ namespace inventory.Controllers
 
         }
 
-        [HttpGet, Route("ReportByCount")]
+        /// <summary>
+        /// گزارش لیست محصولاتی که کمتر از 5 عدد موجودی دارن
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("ReportByCount"), Authorize]
         public ActionResult<List<ProductReportDto>> ProductReportByCount()
         {
             try
@@ -263,7 +302,7 @@ namespace inventory.Controllers
 
                 if (productReport == null)
                 {
-                    return Ok(new List<ProductReportDto>());
+                    return NotFound();
                 }
 
                 return Ok(productReport);
@@ -276,7 +315,11 @@ namespace inventory.Controllers
 
         }
 
-        [HttpGet, Route("ProductTotalPriceReport")]
+        /// <summary>
+        /// دریافت موجودی مالی همه کالا های موجود
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("ProductTotalPriceReport"), Authorize]
         public ActionResult<List<ProductReportDto>> ProductTotalPriceReport()
         {
             try
@@ -292,7 +335,7 @@ namespace inventory.Controllers
 
                 if (productReport == null)
                 {
-                    return Ok(new List<ProductTotalPrice>());
+                    return NotFound();
                 }
 
                 ProductTotalPrice productTotalPrice = new ProductTotalPrice();

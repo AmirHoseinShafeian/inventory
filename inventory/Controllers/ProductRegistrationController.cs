@@ -16,6 +16,11 @@ namespace inventory.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// ثبت رسید محصول
+        /// </summary>
+        /// <param name="productRegistrationDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult<ProductRegistration> CreateProductRegistration(ProductRegistrationDto productRegistrationDto)
         {

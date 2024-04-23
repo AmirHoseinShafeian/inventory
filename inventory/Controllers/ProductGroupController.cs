@@ -1,6 +1,7 @@
 ﻿using inventory.DataAccess;
 using inventory.Entities;
 using inventory.ModelDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,11 @@ namespace inventory.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// برگرداندن لیست گروه کالا
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<ProductGroupListDto>>> GetProductGroup()
         {
             try
@@ -34,12 +39,16 @@ namespace inventory.Controllers
 
                         Id = item.Id,
                         Name = item.Name,
-
                         ParentGroupId = item.ParentGroup != null ? item.ParentGroup.Id : null,
                         ParentGroupName = item.ParentGroup != null ? item.ParentGroup.Name : null,
 
                         Code = item.Code
                     });
+                }
+
+                if (productGroupListDto == null)
+                {
+                    return NotFound();
                 }
 
                 return productGroupListDto;
@@ -50,11 +59,14 @@ namespace inventory.Controllers
                 return BadRequest("خطایی رخ داده است");
             }
 
-
-
         }
 
-        [HttpGet("{id}")]
+        /// <summary>
+        /// برگرداندن لیست گروه کالا با ای دی
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}"), Authorize]
         public ActionResult<ProductGroupListDto> GetProductGroupById(int id)
         {
             try
@@ -86,7 +98,12 @@ namespace inventory.Controllers
 
         }
 
-        [HttpPost]
+        /// <summary>
+        /// ایجاد گروه محصولات
+        /// </summary>
+        /// <param name="productGroupDto"></param>
+        /// <returns></returns>
+        [HttpPost, Authorize]
         public ActionResult<ProductGroup> CreateProductGroup(ProductGroupDto productGroupDto)
         {
             try
@@ -115,7 +132,12 @@ namespace inventory.Controllers
 
         }
 
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// حذف گروه کالا
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteProductGroup(int id)
         {
             try
@@ -139,7 +161,12 @@ namespace inventory.Controllers
 
         }
 
-        [HttpPut, Route("update")]
+        /// <summary>
+        /// ویرایش گروه محصولات
+        /// </summary>
+        /// <param name="productGroupUpdateDto"></param>
+        /// <returns></returns>
+        [HttpPut("update"), Authorize]
         public async Task<IActionResult> UpdateProductGroup(ProductGroupUpdateDto productGroupUpdateDto)
         {
             try

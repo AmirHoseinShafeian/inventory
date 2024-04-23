@@ -15,7 +15,12 @@ namespace inventory.Controllers
         {
             _context = context;
         }
-
+        
+        /// <summary>
+        /// ثبت حواله محصول
+        /// </summary>
+        /// <param name="ProductRemittanceDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult<ProductRemittance> CreateProductRegistration(ProductRemittanceDto ProductRemittanceDto)
         {

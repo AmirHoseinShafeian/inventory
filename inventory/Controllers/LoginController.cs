@@ -11,6 +11,11 @@ namespace inventory.Controllers
     [Route("[controller]")]
     public class LoginController : ControllerBase
     {
+        /// <summary>
+        /// دریافت توکن
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("token")]
         public IActionResult Login([FromBody] LoginDto user)
         {
